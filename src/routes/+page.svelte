@@ -17,6 +17,7 @@
 -->
 
 <div class="menu">
+  <a href="/files"><button>Files</button></a>
   <a href="/subjects"><button>Subjects</button></a>
 </div>
 

@@ -11,7 +11,7 @@ export class Subject {
 export class File {
   constructor() {
     this.ID = null;
-    this.subject = null;
+    //this.subject = null;
     this.name = "";
     this.path = "";
   }

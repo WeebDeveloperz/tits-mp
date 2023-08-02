@@ -21,29 +21,32 @@
 
   const dispatch = createEventDispatcher();
 
-  export let subject = null;
+  export let file = null;
   let storedPassword = sessionStorage.getItem("password")
   let password = storedPassword ? storedPassword : "";
+  let fObject = null;
 
   let noticeText = ""
-  const validate = (subject) => {
-    //if (subject.DisplayName == "")
-    //  return "Display Name Can't Be Blank.";
+  const validate = (file) => {
+    if (file.name == "")
+      return "Please enter a file name";
+    if (fObject == null)
+      return "No file uploaded";
     return "";
   }
 
   const handleSave = async(method) => {
-    noticeText = validate(subject);
+    noticeText = validate(file);
     if (noticeText != "" && method !== "delete") return;
     noticeText = password == "" ? "Password Can't Be Blank." : ""
     if (noticeText != "") return;
 
-    subject.sem = parseInt(subject.sem)
     const data = new FormData();
-    data.append("data", JSON.stringify(subject));
+    data.append("data", JSON.stringify(file));
+    data.append("file", fObject)
     data.append("passwd", password);
 
-    const res = await fetch("http://localhost:6969/subjects", {
+    const res = await fetch("http://localhost:6969/files", {
       method: method,
       body: data
     })
@@ -52,7 +55,7 @@
         if (data.error == "Incorrect Password.") {
           noticeText = "Incorrect Password."
         } else {
-          dispatch("subjects-updated", {});
+          dispatch("files-updated", {});
         }
       });
   }
@@ -62,27 +65,19 @@
 </script>
 
 
-<div class="subject-editor">
+<div class="file-editor">
   <h4 class="notice warning">{noticeText}</h4>
   <div class="fields">
     <div class="field">
-      Branch:
-      <input bind:value={subject.branch} placeholder="Branch">
+      File Name:
+      <input bind:value={file.name} placeholder="File Name">
     </div>
     <div class="field">
-      Semester:
-      <input bind:value={subject.sem} placeholder="Semester" type="number">
-    </div>
-    <div class="field">
-      Subject Name:
-      <input bind:value={subject.name} placeholder="Subject Name">
-    </div>
-    <div class="field">
-      Subject Code:
-      <input bind:value={subject.code} placeholder="Subject Code">
+      Upload File:
+      <input type="file" accept=".pdf" on:change={e => fObject = e.target.files[0]}>
     </div>
   </div>
-  {#if subject.ID != null}
+  {#if file.ID != null}
     <div class="options-alt">
       <button on:click={() => handleSave("delete")}>Delete</button>
     </div>
@@ -90,12 +85,12 @@
   <div class="options">
     <input bind:value={password} placeholder="Enter the password here.">
     <button on:click={handleCancel}>Cancel</button>
-    <button on:click={() => handleSave(subject.ID == null ? "post" : "put")}>Save</button>
+    <button on:click={e => handleSave(file.ID == null ? "post" : "put")}>Save</button>
   </div>
 </div>
 
 <style>
-  .subject-editor {
+  .file-editor {
     position: relative;
     height: 100%;
     width: 100%;
@@ -128,7 +123,7 @@
     justify-content: space-between;
     margin: 0.5rem 0;
   }
-  .field input {
+  .field input, .field select {
     width: 60%;
   }
   .warning {
