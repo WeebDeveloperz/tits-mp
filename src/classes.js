@@ -1,6 +1,6 @@
 export class Subject {
   constructor() {
-    this.ID = null;
+    this.id = null;
     this.code = "";
     this.name = "";
     this.sem = 0;
@@ -10,8 +10,8 @@ export class Subject {
 
 export class File {
   constructor() {
-    this.ID = null;
-    //this.subject = null;
+    this.id = null;
+    this.subject = new Subject();
     this.name = "";
     this.path = "";
   }

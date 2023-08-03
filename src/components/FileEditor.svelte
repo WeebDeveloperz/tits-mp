@@ -39,6 +39,7 @@
     noticeText = validate(file);
     if (noticeText != "" && method !== "delete") return;
     noticeText = password == "" ? "Password Can't Be Blank." : ""
+    noticeText = method === "put" ? "File updation is disabled. Please delete file and upload again." : "";
     if (noticeText != "") return;
 
     const data = new FormData();
@@ -51,8 +52,8 @@
       body: data
     })
       .then(response => response.json())
-      .then(data => {
-        if (data.error == "Incorrect Password.") {
+      .then(r => {
+        if (r.error == "Incorrect Password.") {
           noticeText = "Incorrect Password."
         } else {
           dispatch("files-updated", {});
@@ -77,7 +78,7 @@
       <input type="file" accept=".pdf" on:change={e => fObject = e.target.files[0]}>
     </div>
   </div>
-  {#if file.ID != null}
+  {#if file.id != null}
     <div class="options-alt">
       <button on:click={() => handleSave("delete")}>Delete</button>
     </div>
@@ -85,7 +86,7 @@
   <div class="options">
     <input bind:value={password} placeholder="Enter the password here.">
     <button on:click={handleCancel}>Cancel</button>
-    <button on:click={e => handleSave(file.ID == null ? "post" : "put")}>Save</button>
+    <button on:click={e => handleSave(file.id == null ? "post" : "put")}>Save</button>
   </div>
 </div>
 

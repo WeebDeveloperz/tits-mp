@@ -82,7 +82,7 @@
       <input bind:value={subject.code} placeholder="Subject Code">
     </div>
   </div>
-  {#if subject.ID != null}
+  {#if subject.id != null}
     <div class="options-alt">
       <button on:click={() => handleSave("delete")}>Delete</button>
     </div>
@@ -90,7 +90,7 @@
   <div class="options">
     <input bind:value={password} placeholder="Enter the password here.">
     <button on:click={handleCancel}>Cancel</button>
-    <button on:click={() => handleSave(subject.ID == null ? "post" : "put")}>Save</button>
+    <button on:click={() => handleSave(subject.id == null ? "post" : "put")}>Save</button>
   </div>
 </div>
 
